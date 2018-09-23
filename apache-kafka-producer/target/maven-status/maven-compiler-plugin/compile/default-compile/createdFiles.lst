@@ -1,0 +1,6 @@
+com\daarks\apache\consumers\BaseConsumer.class
+com\daarks\apache\producers\Producer.class
+com\daarks\apache\producers\ProducerWithKeysAndCallback.class
+com\daarks\apache\producers\ProducerCallback$1.class
+com\daarks\apache\producers\ProducerWithKeysAndCallback$1.class
+com\daarks\apache\producers\ProducerCallback.class

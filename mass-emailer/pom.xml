@@ -8,9 +8,6 @@
 
 
 	<dependencies>
-		<!-- <dependency> <groupid>javax.mail</groupid> <artifactid>mail</artifactid> 
-			<version>1.4.7</version> </dependency> <dependency> <groupid>javax.mail</groupid> 
-			<artifactid>javax.mail-api</artifactid> <version>1.5.5</version> </dependency> -->
 
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -31,23 +28,48 @@
 		</dependency>
 
 	</dependencies>
-<!--
+	
 	<build>
         <plugins>
+            <!--force java 8-->
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.udemy.tutorial.app.App</mainClass>
-                        </manifest>
-                    </archive>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!--package as one fat jar-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.udemy.tutorial.app.App</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>assemble-all</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-    </build> 
--->
+    </build>
+	
+	
 </project>

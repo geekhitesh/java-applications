@@ -10,12 +10,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class Producer {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		String bootstrapServer = "127.0.0.1:9092";
-		
-		//create producer properties
-		
 		Properties properties = new Properties();
 		
 		

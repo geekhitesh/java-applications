@@ -1,5 +1,6 @@
 package com.udemy.tutorial.data;
 
+import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class DataSource {
 
 	private static List<List<String>> emailListReference;
 	private static List<List<String>> emailListSent;
-	private static Predicate<? super List<String>> p1 = (s) -> !emailListSent.contains(s);
+	private static Predicate<? super List<String>> p1 = (s) -> !emailListSent.contains(s) && ! (s.get(0) == "");
 
 	public DataSource() {
 
@@ -42,14 +43,15 @@ public class DataSource {
 	private List<List<String>> getCSVContent(String fileName) {
 
 		URL url = getClass().getResource(fileName);
+		File file = new File(fileName);
 		List<List<String>> data = null;
 
 		try {
 			// Create an object of file reader
 			// class with CSV file as a parameter.
-			FileReader filereader = new FileReader(url.getPath());
+			//FileReader filereader = new FileReader(url.getPath());
 			
-
+			FileReader filereader = new FileReader(fileName);
 			// create csvReader object and skip first Line
 			CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
 			List<String[]> allData = csvReader.readAll();
@@ -72,9 +74,7 @@ public class DataSource {
 		getEmailListSent();
 
 		List<List<String>> emailPending = emailListReference.stream()
-											.peek(System.out::println)
 											.filter(p1)
-											.peek(System.out::println)
 											.limit(FileConstants.TOTAL_EMAILS_IN_BATCH)
 											.collect(Collectors.toList());
 

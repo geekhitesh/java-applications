@@ -15,6 +15,7 @@ public class PermanentMarker implements Runnable {
 
 	private BlockingQueue<List<String>> sentEmailQueue;
 	private Lock writerLock = new ReentrantLock();
+	private Integer writtenEmailCount=0;
 
 
 	public PermanentMarker(BlockingQueue<List<String>> sentEmailQueue) {
@@ -32,12 +33,12 @@ public class PermanentMarker implements Runnable {
 	private void writetoCSV(String fileName) {
 		
 		System.out.println("Permanent Marker request by: "+Thread.currentThread().getName());
-		URL url = getClass().getResource(fileName);
-		File file = new File(url.getPath()); 
+		//URL url = getClass().getResource(fileName);
+		File file = new File(fileName); 
 
 		try {
 			    
-			while( true) {
+			while( writtenEmailCount < FileConstants.TOTAL_EMAILS_IN_BATCH) {
 				
 				
 				if(! sentEmailQueue.isEmpty())
@@ -56,6 +57,7 @@ public class PermanentMarker implements Runnable {
 			  
 			        // closing writer connection 
 			        writer.close(); 
+			        writtenEmailCount++;
 			        System.out.println("Permanent Marker released by: "+Thread.currentThread().getName());
 			        writerLock.unlock();
 		        

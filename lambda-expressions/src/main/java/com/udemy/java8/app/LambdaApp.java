@@ -8,7 +8,6 @@ public class LambdaApp {
 	
 		Comparator<String> stringComparator = new Comparator<String>() {
 
-			@Override
 			public int compare(String o1, String o2) {
 				// TODO Auto-generated method stub
 				return o1.compareToIgnoreCase(o2);
@@ -28,6 +27,12 @@ public class LambdaApp {
 				System.out.println("Drawing: "+name);
 				
 			}
+
+			@Override
+			public void printMessage(String message) {
+				// TODO Auto-generated method stub
+				
+			}
 			
 		};
 	
@@ -40,7 +45,7 @@ public class LambdaApp {
 		System.out.println(comparision);
 		
 		
-		Shape s1 = (name) -> System.out.println("Drawing "+name);
+		//Shape s1 = (name) -> System.out.println("Drawing "+name);
 		
 		//s1.draw("Rectangle");
 		

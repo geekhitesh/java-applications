@@ -31,7 +31,7 @@ public class App {
 		System.out.println("Going to wait now for DataSource to get populated!!");
 		
 		List<List<String>> pendingEmail = ds.getEmailListPending();
-		System.out.println(pendingEmail);
+		//System.out.println(pendingEmail);
 		pendingEmailQueue.addAll(pendingEmail);
 		
 		System.out.println("Total Items pending in queue: "+pendingEmailQueue.size());
@@ -50,12 +50,13 @@ public class App {
 		
 		Emailer emailer = new Emailer(pendingEmailQueue,sentEmailQueue);
 		
+		System.out.println("Starting Mail Threads");
 		for(int i=0;i<EmailConstants.PARALLEL_WORKERS;i++) {
-			
+			System.out.println("Started Thread:"+i);
 			executors.submit(emailer);
 		}
 		
-		executors.shutdown();
+		
 		
 		PermanentMarker marker = new PermanentMarker(sentEmailQueue);
 		
@@ -67,6 +68,11 @@ public class App {
 			writers.submit(marker);
 		}
 		System.out.println("Mailer Tasks Submitted");
+		
+		writers.shutdown();
+		executors.shutdown();
+		
+		System.out.println("Executors and writers shutdown gracefully");
 		
 	}
 

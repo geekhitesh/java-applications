@@ -3,4 +3,16 @@
   <groupId>com.daarks.lambdaexpressions</groupId>
   <artifactId>lambda-expressions</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+  
+	  	<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+	<dependency>
+	    <groupId>com.google.code.gson</groupId>
+	    <artifactId>gson</artifactId>
+	    <version>2.8.5</version>
+	</dependency>
+  
+  </dependencies>
+  
 </project>

@@ -3,7 +3,6 @@ package com.udemy.tutorial.mailer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -19,6 +18,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import com.udemy.tutorial.constants.EmailConstants;
+import com.udemy.tutorial.constants.FileConstants;
 
 public class Emailer implements Runnable {
 
@@ -28,7 +28,7 @@ public class Emailer implements Runnable {
 	private Lock sendMessageLock = new ReentrantLock();
 	private BlockingQueue<List<String>> emailQueue;
 	private BlockingQueue<List<String>> sentEmailQueue;
-	
+	private  Integer sentEmailCount=0;
 	public Emailer(BlockingQueue<List<String>> emailQueue,BlockingQueue<List<String>> sentEmailQueue) {
 		this.emailQueue = emailQueue;
 		this.sentEmailQueue = sentEmailQueue;
@@ -57,9 +57,11 @@ public class Emailer implements Runnable {
 		for (int i = 0; i < toEmails.length; i++) {
 			emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmails[i]));
 		}
-
+		
+		emailMessage.setFrom(new InternetAddress(EmailConstants.EMAIL_FROM_USER_ID,EmailConstants.EMAIL_FROM_USER_NAME));
 		emailMessage.setSubject(getEmailSubject(emailRecord.get(1)));
 		emailMessage.setContent(getEmailBody(emailRecord.get(1)), "text/html");
+		emailMessage.setHeader("Disposition-Notification-To", "mohan@buniyad.com");
 		
 		System.out.println("Thread "+Thread.currentThread().getName() + " exited createEmailMessage");
 		return emailMessage;
@@ -69,10 +71,11 @@ public class Emailer implements Runnable {
 	private void sendEmail(MimeMessage  emailMessage, List<String> item) throws AddressException, MessagingException {
 		
 		System.out.println("Thread "+Thread.currentThread().getName() + " entered sendEmail function");
+		long startTime = System.currentTimeMillis();
 		
 		Transport transport = mailSession.getTransport("smtp");
 
-		transport.connect(EmailConstants.EMAIL_HOST, 
+		transport.connect(EmailConstants.EMAIL_HOST,
 						  EmailConstants.EMAIL_FROM_USER_ID,
 						  EmailConstants.EMAIL_FROM_USER_PASSWORD);
 		
@@ -87,7 +90,9 @@ public class Emailer implements Runnable {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Email sent successfully on: "+emailMessage.getAllRecipients()[0].toString());
+		long endTime = System.currentTimeMillis();
+		
+		System.out.println("Email sent successfully on: "+emailMessage.getAllRecipients()[0].toString() + "; Time Taken(s): "+ ((endTime - startTime)/1000));
 		System.out.println("Thread "+Thread.currentThread().getName() + " exited sendEmail function");
 		
 	}
@@ -101,14 +106,13 @@ public class Emailer implements Runnable {
 		
 		setMailServerProperties();
 		
-		while(true)
+		while(sentEmailCount < FileConstants.TOTAL_EMAILS_IN_BATCH && emailQueue.size() > 0)
 		{
 			createMessageLock.lock();
 			try {
 				System.out.println("Current Queue Size: "+ emailQueue.size());
 				emailRecord =  emailQueue.take();
-				//String emailTo = emailQueue.take().toString();
-				String emailTo = emailRecord.get(0);
+				emailRecord.get(0);
 				try {
 					message = createEmailMessage(emailRecord);
 				} catch (IOException e) {
@@ -132,12 +136,15 @@ public class Emailer implements Runnable {
 			
 			try {
 				sendEmail(message,emailRecord);
+				sentEmailCount++;
+				System.out.println("Sent Mail Count:"+sentEmailCount);
 			} catch (MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 			sendMessageLock.unlock();
+
 			try {
 				doRestAfterWork();
 			} catch (InterruptedException e) {
@@ -158,8 +165,9 @@ public class Emailer implements Runnable {
 	{
 		System.out.println("Fetching Email Template");
 		
-		URL url = getClass().getResource(EmailConstants.EMAIL_TEMPLATE_FILE_PATH);
-		File file = new File(url.getPath());
+		//URL url = getClass().getResource(EmailConstants.EMAIL_TEMPLATE_FILE_PATH);
+	//	File file = new File(url.getPath());
+		File file = new File(EmailConstants.EMAIL_TEMPLATE_FILE_PATH);
 		FileInputStream fileInputStream;
 		fileInputStream = new FileInputStream(file);
 		byte[] bytes = new byte[(int) file.length()];

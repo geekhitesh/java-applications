@@ -35,6 +35,7 @@ public class ProducerCallback {
 
 		for (Integer i = 0; i < 10; i++) {
 			String message = "Message_"+Integer.toString(i);
+			
 			ProducerRecord<String, String> record = new ProducerRecord<String, String>("second_topic", message);
 
 			producer.send(record, new Callback() {

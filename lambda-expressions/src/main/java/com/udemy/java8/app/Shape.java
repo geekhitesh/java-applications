@@ -4,8 +4,5 @@ public interface Shape {
 
 	public void draw( String name);
 	
-	public static void printMessage(String message) {
-		
-		System.out.println("Hello: "+ message);
-	}
+	public void printMessage(String message);
 }

@@ -34,22 +34,23 @@ public class ProducerWithKeysAndCallback {
 
 		// send data
 
-		for (Integer i = 0; i < 10; i++) {
+		for (Integer i = 0; i < 999; i++) {
 			
 			String message = "Message_"+Integer.toString(i);
 			String key = "key_"+Integer.toString(i);
 			
-			System.out.println("Key:"+key);
+			logger.info("Key:"+key);
 			
-			ProducerRecord<String, String> record = new ProducerRecord<String,String>("second_topic",key ,message);
+			ProducerRecord<String, String> record = new ProducerRecord<String,String>("AUDIT_TOPIC",key ,message);
 
 			producer.send(record, new Callback() {
 
 				public void onCompletion(RecordMetadata recordMetadata, Exception e) {
+//					// TODO Auto-generated method stub
+//					logger.info("Received new metadata\n" + "Topic: " + recordMetadata.topic() + "\n" + "Partion:"
+//							+ recordMetadata.partition() + "\n" + "Offset:" + recordMetadata.offset() + "\n");
 					// TODO Auto-generated method stub
-					logger.info("Received new metadata\n" + "Topic: " + recordMetadata.topic() + "\n" + "Partion:"
-							+ recordMetadata.partition() + "\n" + "Offset:" + recordMetadata.offset() + "\n");
-
+					logger.info("Partion:"+ recordMetadata.partition());
 				}
 			}).get();
 

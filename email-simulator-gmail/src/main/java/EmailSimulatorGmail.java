@@ -44,7 +44,7 @@ public class EmailSimulatorGmail {
 
 	public void createEmailMessage() throws AddressException,
 			MessagingException {
-		String[] toEmails = { "hitesh.ahuja@buniyad.com" };
+		String[] toEmails = { "gmail@gmail.com" };
 		String emailSubject = "Java Email";
 		String emailBody = "This is an email sent by JavaMail api.";
 
@@ -64,8 +64,8 @@ public class EmailSimulatorGmail {
 	public void sendEmail() throws AddressException, MessagingException {
 
 		String emailHost = "smtp.gmail.com";
-		String fromUser = "hitesh.ahuja@buniyad.com";
-		String fromUserEmailPassword = "Friday27";
+		String fromUser = "gmail@gmail.com";
+		String fromUserEmailPassword = "gmail@gmail.com";
 
 		Transport transport = mailSession.getTransport("smtp");
 
